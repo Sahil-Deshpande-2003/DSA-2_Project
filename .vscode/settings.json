@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "string": "c",
+        "array": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "ranges": "c",
+        "span": "c",
+        "stacktrace": "c",
+        "regex": "c",
+        "valarray": "c",
+        "trie.h": "c"
+    }
+}
