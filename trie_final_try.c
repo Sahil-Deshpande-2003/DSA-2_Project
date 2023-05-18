@@ -8,6 +8,8 @@
 
 #include<stdbool.h>
 
+// SIZE IS AN ISSUE!!!!!
+
 #define size 26
 
 #define MAX_WORD_LENGTH 100
@@ -238,6 +240,7 @@ void auto_complete_helper(TrieNode *root, int i, char *key,char* buffer, int dep
     if (i == strlen(key)){
 
         // printf("Inside base case, root = %s\n",root->data);
+        
 
         for (int i = 0; i < size; i++)
         {
@@ -309,13 +312,192 @@ void auto_complete_helper(TrieNode *root, int i, char *key,char* buffer, int dep
 
 }
 
+void auto_complete_new(TrieNode *root, char *key,char* buffer, int depth){
+
+    if (!root) return;
+
+    printf("key = %s\n",key);
+
+    printf("Printing child array\n");
+
+    return;
+
+    for (int i = 0; i < size; i++)
+    {
+
+
+        if (root->children[i]) printf("%s\n",root->children[i]->data);
+        /* code */
+    }
+    
+
+
+    for (int i = 0; i < size; i++)
+    {
+
+        if (root->children[i]){
+
+        buffer[depth++] = 'a' + i;
+
+        if (!(root->children[i]->isTerminal)){
+
+            auto_complete_new(root,key,buffer,depth+1);
+        }
+
+        else{
+
+            buffer[depth] = '\0';
+
+            printf("%s\n",buffer);
+
+            depth--;
+
+        }
+
+        }
+
+        
+
+
+        /* code */
+    }
+    
+    
+    return;
+
+
+}
+
+void auto_complete_recursion_2nd_step(TrieNode *root,char *key,char* buffer, int *depth){
+
+    // base case
+
+    if (!root) return;
+
+   
+
+    TrieNode*child;
+
+    // printf("***************************************************\n");
+
+    for (int i = 0; i < size; i++)
+    {
+        if (root->children[i]){
+
+            //  printf("root = %s\n",root->data);
+
+            child = root->children[i];
+
+            // printf("child = %s\n",child->data);
+
+            // printf("buffer = %s\n",buffer);
+
+            // printf("depth = %d\n",*depth);
+
+
+            buffer[(*depth)++] = 'a' + i; // yaha seg fault aa raha hai,depth is taking garbage value
+
+            
+
+            // printf("Dead\n");
+
+            if (child->isTerminal){
+
+                // printf("Inside is Terminal\n");
+
+                // printf("When I just entered, depth = %d\n",(*depth));
+
+                buffer[(*depth)] = '\0';
+
+                printf("%s\n",buffer);
+
+                //  printf("Just before decrementing, depth = %d\n",(*depth)); // fine
+
+                // printf("After buffer\n");
+
+                (*depth)--; // this was the error   *(depth)-- lol
+
+                // printf("Before leaving, depth = %d\n",(*depth));
+
+                // auto_complete_recursion_2nd_step(child,key,buffer,depth);
+
+                
+            }
+
+            else auto_complete_recursion_2nd_step(child,key,buffer,depth);
+
+            //printf("Here?\n");
+            
+
+        }
+
+
+
+
+
+    }
+
+    (*depth)--;
+    
+    return;
+
+}
+
+// working
+
+TrieNode* auto_complete_iteration_1st_step(TrieNode *root,char *key,char* buffer, int *depth){
+
+    if (!root) return root;
+
+    int j = 0;
+
+    while(j<strlen(key)){
+
+        int ind = key[j] - 'a';
+
+        if (root->children[ind]){
+
+            root = root->children[ind];
+
+            buffer[(*depth)++] = key[j];
+
+        }
+
+        j++;
+
+    }
+
+    buffer[(*depth)] = '\0';
+
+    return root;
+
+        
+
+}
+
 void auto_complete(TrieNode *root,char *key){
 
-    // printf("I am here\n");
+    // updates the root as well as buffer, after this function is executed 
+    // key contains just 1 char and root is updated
 
     char buffer[MAX_WORD_LENGTH];
 
-    auto_complete_helper(root,0,key,buffer,0);
+    int depth = 0;
+
+    TrieNode*first = auto_complete_iteration_1st_step(root,key,buffer,&depth);
+
+    
+
+    // printf("new root = %s\n",first->data);
+
+    // printf("new buff = %s\n",buffer);
+
+    // printf("new depth = %d\n",depth);
+
+    auto_complete_recursion_2nd_step(first,key,buffer,&depth);
+
+    
+  
 
     return;
 }
@@ -347,12 +529,21 @@ int main(){
 
 
     TrieNode*t = init();
-    insert(t,"adg");
-    insert(t,"aez");
-    insert(t,"aeo");
-    insert(t,"afm");
-    insert(t,"bn");
-    insert(t,"cp");
+    // insert(t,"adgqs");
+    // insert(t,"adgqr");
+    // insert(t,"aez");
+    // insert(t,"aeo");
+    // insert(t,"afm");
+    // insert(t,"bn");
+    // insert(t,"cp");
+
+    insert(t,"abandon");
+    insert(t,"are");
+    insert(t,"assessment");
+    insert(t,"assistance");
+    insert(t,"boo");
+    insert(t,"boorish");
+    insert(t,"brave");
     
    char buffer[MAX_WORD_LENGTH];
     // display_trie(t, buffer, 0);
@@ -362,7 +553,7 @@ int main(){
 
     printf("\n\n\n");
 
-    auto_complete(t,"ad"); // not working
+    auto_complete(t,"b"); // not working
   
 
     

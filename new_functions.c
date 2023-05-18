@@ -173,4 +173,12 @@ void display_trie(TrieNode* root, char* buffer, int depth) {
     }
 }
 
+void auto_complete(TrieNode *root, char *word){
+
+    
+    
+
+
+}
+
 
