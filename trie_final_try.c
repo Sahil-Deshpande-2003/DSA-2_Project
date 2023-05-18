@@ -368,6 +368,17 @@ void auto_complete_new(TrieNode *root, char *key,char* buffer, int depth){
 
 }
 
+void print_buffer(char*buffer, int i){
+
+    //printf("After decementing depth, printing buffer = ");
+
+    buffer[i++] = '\0';
+
+    printf("%s\n",buffer);
+
+    i--;
+}
+
 void auto_complete_recursion_2nd_step(TrieNode *root,char *key,char* buffer, int *depth){
 
     // base case
@@ -415,12 +426,16 @@ void auto_complete_recursion_2nd_step(TrieNode *root,char *key,char* buffer, int
 
                 // printf("After buffer\n");
 
-                (*depth)--; // this was the error   *(depth)-- lol
 
                 // printf("Before leaving, depth = %d\n",(*depth));
 
-                // auto_complete_recursion_2nd_step(child,key,buffer,depth);
+                auto_complete_recursion_2nd_step(child,key,buffer,depth);
 
+                //(*depth)--; // this was the error   *(depth)-- lol
+
+                //print_buffer(buffer,*depth);
+
+                
                 
             }
 
@@ -540,10 +555,12 @@ int main(){
     insert(t,"abandon");
     insert(t,"are");
     insert(t,"assessment");
+    insert(t,"assess");
     insert(t,"assistance");
     insert(t,"boo");
     insert(t,"boorish");
     insert(t,"brave");
+  
     
    char buffer[MAX_WORD_LENGTH];
     // display_trie(t, buffer, 0);
@@ -553,7 +570,8 @@ int main(){
 
     printf("\n\n\n");
 
-    auto_complete(t,"b"); // not working
+    auto_complete(t,"a"); 
+    auto_complete(t,"b"); 
   
 
     
