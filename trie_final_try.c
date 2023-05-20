@@ -278,13 +278,13 @@ void display_compress_trie(TrieNode *t,char *buffer, int depth){
         return;
     }
 
-    printf("root = %s ",t->data);
+   // printf("root = %s ",t->data);
 
-    printf("buffer before insertion = ");
+    //printf("buffer before insertion = ");
 
-    print_buffer(buffer,depth);
+    //print_buffer(buffer,depth);
 
-    printf("\n");
+    //("\n");
 
     // printf("Inside, display compress trie, root = %s\n",t->data);
 
@@ -320,7 +320,7 @@ void display_compress_trie(TrieNode *t,char *buffer, int depth){
 
                 // print_buffer(buffer,depth);
 
-                printf("child = %s\n",child->data);
+                //printf("child = %s\n",child->data);
 
                 buffer[depth++] = child->data[j];
 
@@ -330,11 +330,11 @@ void display_compress_trie(TrieNode *t,char *buffer, int depth){
 
                 //  printf("\n");
 
-                printf("buffer after incrementing depth and inserting jth char of child = ");
+                //printf("buffer after incrementing depth and inserting jth char of child = ");
 
-                print_buffer(buffer,depth);
+               // print_buffer(buffer,depth);
 
-                printf("\n");
+                //printf("\n");
 
                 j++;
                 
@@ -352,37 +352,39 @@ void display_compress_trie(TrieNode *t,char *buffer, int depth){
 
                 printf("%s\n",buffer);
 
-                for (int i = 0; i < child->index; i++)
+               
+
+                //printf("After resetting, buffer = ");
+
+                //print_buffer(buffer,depth);
+
+                //printf("\n");
+                
+            }
+
+            //printf("Just before function call, buffer = ");
+
+            //print_buffer(buffer,depth);
+
+            //printf("\n");
+
+            display_compress_trie(child,buffer,depth);
+
+             for (int i = 0; i < child->index; i++)
                 {
                     depth--;
                     /* code */
                 }
 
-                printf("After resetting, buffer = ");
+           // printf("root = %s\n",t->data);
 
-                print_buffer(buffer,depth);
+            //printf("Just after function call, buffer = ");
 
-                printf("\n");
-                
-            }
+            //print_buffer(buffer,depth);
 
-            printf("Just before function call, buffer = ");
+            //printf("\n");
 
-            print_buffer(buffer,depth);
-
-            printf("\n");
-
-            display_compress_trie(child,buffer,depth);
-
-            printf("root = %s\n",t->data);
-
-            printf("Just after function call, buffer = ");
-
-            print_buffer(buffer,depth);
-
-            printf("\n");
-
-            printf("*******************************************\n");
+            //printf("*******************************************\n");
             
         }
 
@@ -551,7 +553,25 @@ void display_trie(TrieNode* root, char* buffer, int depth) {
     }
 }
 
+int count_nodes(TrieNode *t){
 
+    if (!t) return 0;
+
+    int ct = 0;
+
+
+    for (int i = 0; i < size; i++)
+    {
+        if (t->children[i]) ct+=count_nodes(t->children[i]);
+        /* code */
+    }
+
+    return 1+ct;
+
+
+    
+
+}
 
 
 
@@ -583,10 +603,21 @@ int main(){
     // insert(t,"boorish");
     // insert(t,"brave");
     // insert(t,"sahil");
-    insert(t,"bed");
-    insert(t,"bent");
-    insert(t,"bat");
-    insert(t,"note");
+    insert(t,"bear");
+    insert(t,"bell");
+    insert(t,"bid");
+    insert(t,"bull");
+    insert(t,"buy");
+    insert(t,"sell");
+    insert(t,"stock");
+    insert(t,"stop");
+    insert(t,"assessment");
+    insert(t,"assistance");
+    // insert(t,"assess");
+
+    int ct = count_nodes(t);
+
+    printf("count1 = %d\n",ct);
   
     // printf("After insertion, root = %s\n",t->data);
     
@@ -600,8 +631,19 @@ int main(){
 
     // auto_complete(t,"a"); 
     // auto_complete(t,"b"); 
+    auto_complete(t,"b");
+
+    printf("\n\n\n");
 
     t = compress_trie(t);
+
+    //  auto_complete(t,"b");
+
+    //      printf("\n\n\n");
+
+    ct = count_nodes(t);
+
+    printf("count2 = %d\n",ct);
 
     // printf("After compression, root = %s\n",t->data);
 
@@ -609,6 +651,13 @@ int main(){
 
 
     display_compress_trie(t,buff,0);
+
+
+
+
+   
+
+
     
     // printf("display compress function over\n");
   
