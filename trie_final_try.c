@@ -54,6 +54,18 @@ TrieNode* init(){
     
 }
 
+void print_buffer(char *buffer, int depth){
+
+    buffer[depth] = '\0';
+
+    printf("%s\n",buffer);
+
+    depth--;
+
+    return;
+
+}
+
 void insert_helper(TrieNode *root, char *key, int i){
 
     if (i == strlen(key)){
@@ -105,6 +117,9 @@ void insert(TrieNode *t, char *key){
 // not the compressed version!
 
 void print_trie_helper(TrieNode* root, char* store, int ind) {
+
+    printf("root = %s\n",root->data);
+
     if (root->isTerminal) {
         store[ind] = '\0';
         printf("%s\n", store);
@@ -131,25 +146,59 @@ void print_trie(TrieNode*t){
 
 }
 
-void compress_trie(TrieNode *root){
+TrieNode* compress_trie(TrieNode *root){
 
 
 
-    if (!root) return;
+    if (!root) return root;
+    
+    TrieNode*child = NULL;
 
     for (int i = 0; i < size; i++)
     {
-          compress_trie(root->children[i]);
+        if (root->children[i]){
+
+            child = root->children[i];
+
+            
+        //    printf("Before function call, root = %s\n",root->data);
+
+        //    printf("Before function call, child = %s\n",child->data);
+
+            // printf("********************************************\n");
+
+            child =  compress_trie(child);
+
+            // printf("After function call, root = %s\n",root->data);
+
+
+            // printf("After function call, child = %s\n",child->data);
+
+            // printf("********************************************\n");
+
+            root->children[i] = child;
+
+
+            // ye neeche wala condition modify karna padega
+
+            // if (root && root->data[0] == '\0'){
+
+            //     printf("I am here\n");
+
+            //     return root;
+            // }
+        }
+         
 
     
+    }
 
       
-        /* code */
-    }
+        /* code */  
 
 
     int childCount = 0;
-    TrieNode*child = NULL;
+    // TrieNode*child = NULL;
 
     for (int i = 0; i < size; i++)
     {
@@ -159,7 +208,7 @@ void compress_trie(TrieNode *root){
 
             child = root->children[i];
 
-            if (childCount>1) return;
+            if (childCount>1) return root;
         }
 
 
@@ -211,173 +260,141 @@ void compress_trie(TrieNode *root){
 
     }
 
-    return ;
+    return root ;
 
     
     
     
 }
 
-// void display_compress_trie(TrieNode t){
+void display_compress_trie(TrieNode *t,char *buffer, int depth){
 
-//     for (int i = 0; i < size; i++)
-//     {
-//         if (t.children[i]) printf("%s\n",t.children[i]->data);
-//         /* code */
-//     }
+    // atleast all roots are getting printed
 
-//     return;
-    
-// }
+    if (!t){
 
-void auto_complete_helper(TrieNode *root, int i, char *key,char* buffer, int depth){
-
-    // base case
-
-    // printf("root = %s\n",root->data);
-
-
-    if (i == strlen(key)){
-
-        // printf("Inside base case, root = %s\n",root->data);
-        
-
-        for (int i = 0; i < size; i++)
-        {
-            if (root->children[i] && root->children[i]->isTerminal){
-
-                //printf("char_final = %c\n",'a'+i);
-                
-                 buffer[depth++] = 'a' + i;
-
-                 buffer[depth] = '\0';
-
-                printf("%s\n", buffer);
-
-                depth--;
-                 
-            }
-            
-            /* code */
-        }
-        
-
-
-      
-
+        // printf("About to return\n");
 
         return;
-
     }
 
-    // printf("Hi?\n");
+    printf("root = %s ",t->data);
 
+    printf("buffer before insertion = ");
 
-    int ind = key[i] - 'a';
+    print_buffer(buffer,depth);
 
-    // printf("ind = %d\n",ind);
+    printf("\n");
 
-    TrieNode* child;
+    // printf("Inside, display compress trie, root = %s\n",t->data);
 
-    // printf("Printing child array of root\n");
-
-    // for (int i = 0; i < size; i++)
-    // {
-    //     if (root->children[i]) printf("child = %s\n",root->children[i]->data);
-    //     /* code */
-    // }
-    
-
-    if (root->children[ind]!=NULL){
-
-        // printf("root = %s\n",root->data);
-
-
-        child = root->children[ind];
-
-        buffer[depth] = 'a' + ind;
-
-        // printf("char_insert = %c\n",'a'+i);
-
-        auto_complete_helper(child,i+1,key,buffer,depth+1);
-    }
-
-
-
-    //   printf("**************************\n");
-
-    return;
-
-
-
-}
-
-void auto_complete_new(TrieNode *root, char *key,char* buffer, int depth){
-
-    if (!root) return;
-
-    printf("key = %s\n",key);
-
-    printf("Printing child array\n");
-
-    return;
-
-    for (int i = 0; i < size; i++)
-    {
-
-
-        if (root->children[i]) printf("%s\n",root->children[i]->data);
-        /* code */
-    }
-    
+    TrieNode *child;
 
 
     for (int i = 0; i < size; i++)
     {
 
-        if (root->children[i]){
-
-        buffer[depth++] = 'a' + i;
-
-        if (!(root->children[i]->isTerminal)){
-
-            auto_complete_new(root,key,buffer,depth+1);
-        }
-
-        else{
-
-            buffer[depth] = '\0';
-
-            printf("%s\n",buffer);
-
-            depth--;
-
-        }
-
-        }
+        // printf("i = %d\n",i);
 
         
+        if (t->children[i]){
+            
+            // printf("Here?\n");
 
+            child = t->children[i];
+
+            // printf("Inside Non Null child\n");
+
+            // printf("root = %s\n",t->data);
+
+            // printf("child = %s\n",child->data);
+
+            int j = 0;
+
+            while (j<child->index)
+            {
+
+                // printf("root = %s\n",t->data);
+
+                // printf("Printing buffer before incrementing depth\n");
+
+                // print_buffer(buffer,depth);
+
+                printf("child = %s\n",child->data);
+
+                buffer[depth++] = child->data[j];
+
+                // printf("buffer after insertion = ");
+
+                // print_buffer(buffer,depth);
+
+                //  printf("\n");
+
+                printf("buffer after incrementing depth and inserting jth char of child = ");
+
+                print_buffer(buffer,depth);
+
+                printf("\n");
+
+                j++;
+                
+                /* code */
+            }
+
+
+            if(child->isTerminal){
+
+                // printf("I am here\n");pri
+
+                buffer[depth] = '\0';
+
+                printf("buffer inside the base case = ");
+
+                printf("%s\n",buffer);
+
+                for (int i = 0; i < child->index; i++)
+                {
+                    depth--;
+                    /* code */
+                }
+
+                printf("After resetting, buffer = ");
+
+                print_buffer(buffer,depth);
+
+                printf("\n");
+                
+            }
+
+            printf("Just before function call, buffer = ");
+
+            print_buffer(buffer,depth);
+
+            printf("\n");
+
+            display_compress_trie(child,buffer,depth);
+
+            printf("root = %s\n",t->data);
+
+            printf("Just after function call, buffer = ");
+
+            print_buffer(buffer,depth);
+
+            printf("\n");
+
+            printf("*******************************************\n");
+            
+        }
 
         /* code */
     }
     
-    
     return;
-
-
 }
 
-void print_buffer(char*buffer, int i){
 
-    //printf("After decementing depth, printing buffer = ");
 
-    buffer[i++] = '\0';
 
-    printf("%s\n",buffer);
-
-    i--;
-}
 
 void auto_complete_recursion_2nd_step(TrieNode *root,char *key,char* buffer, int *depth){
 
@@ -518,6 +535,9 @@ void auto_complete(TrieNode *root,char *key){
 }
 
 void display_trie(TrieNode* root, char* buffer, int depth) {
+
+    // printf("root = %s\n",root->data);
+
     if (root->isTerminal) {
         buffer[depth] = '\0';
         printf("%s\n", buffer);
@@ -542,6 +562,9 @@ void display_trie(TrieNode* root, char* buffer, int depth) {
 
 int main(){
 
+    // problem is that I need to create root with null char as data and then 
+    // isnert all the nodes as it children
+
 
     TrieNode*t = init();
     // insert(t,"adgqs");
@@ -551,16 +574,21 @@ int main(){
     // insert(t,"afm");
     // insert(t,"bn");
     // insert(t,"cp");
-
-    insert(t,"abandon");
-    insert(t,"are");
-    insert(t,"assessment");
-    insert(t,"assess");
-    insert(t,"assistance");
-    insert(t,"boo");
-    insert(t,"boorish");
-    insert(t,"brave");
+    // insert(t,"abandon");
+    // insert(t,"are");
+    // insert(t,"assessment");
+    // insert(t,"assess");
+    // insert(t,"assistance");
+    // insert(t,"boo");
+    // insert(t,"boorish");
+    // insert(t,"brave");
+    // insert(t,"sahil");
+    insert(t,"bed");
+    insert(t,"bent");
+    insert(t,"bat");
+    insert(t,"note");
   
+    // printf("After insertion, root = %s\n",t->data);
     
    char buffer[MAX_WORD_LENGTH];
     // display_trie(t, buffer, 0);
@@ -570,8 +598,19 @@ int main(){
 
     printf("\n\n\n");
 
-    auto_complete(t,"a"); 
-    auto_complete(t,"b"); 
+    // auto_complete(t,"a"); 
+    // auto_complete(t,"b"); 
+
+    t = compress_trie(t);
+
+    // printf("After compression, root = %s\n",t->data);
+
+    char buff[MAX_WORD_LENGTH];
+
+
+    display_compress_trie(t,buff,0);
+    
+    // printf("display compress function over\n");
   
 
     
